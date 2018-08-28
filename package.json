@@ -1,0 +1,38 @@
+{
+  "name": "react-script",
+  "version": "1.0.0",
+  "description": "A dynamic external script loader component for React.",
+  "main": "lib/index.js",
+  "repository": "https://github.com/flip-inc/react-script.git",
+  "author": "Roger Graham <roger.graham.1393@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "react": "^16.4.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-class-property": "^1.1.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-prefer-object-spread": "^1.2.1",
+    "eslint-plugin-react": "^7.11.1",
+    "flow-bin": "^0.79.1"
+  },
+  "scripts": {
+    "build": "npm run clean && npm run build:lib",
+    "build:lib": "babel src --out-dir lib",
+    "clean": "rm -rf lib",
+    "lint": "eslint ./src/*"
+  }
+}
