@@ -50,7 +50,7 @@ npm install --save react-script
 
 ## Server Usage
 
-ScriptProvider takes an `injectScript` function, and calls it with whatever scripts are rendered in your app. The scripts passed to that function take this form:
+ScriptProvider takes an `injectScript` function, and calls it with whatever scripts are rendered in your app. The parameter passed to that function takes this form:
 ```javascript
 {
   onLoad?: string,
