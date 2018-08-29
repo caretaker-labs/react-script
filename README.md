@@ -4,99 +4,95 @@
 ![Real Download Count (Very Real)](https://img.shields.io/badge/proud%20dads-none%20I%20am%20a%20disappointment-red.svg?longCache=true&style=flat)
 ![Very Real Test Coverage](https://img.shields.io/badge/github%20stars-more%20than%20dan%20abramov-brightgreen.svg)
 
-React Mapbox is a dead simple, performant, and easy to use React library for Mapbox. Other libraries either aim to cover the entire mapbox-gl-js API, or provide specific functionality for unique use cases.
+React Script is a simple way to dynamically load external scripts on both the client and server side for both convenience and performance. This library provides two components, `Script` and `ScriptProvider`.
 
-We aim to give you a dead simple set of basic map components to work with, and if you end up needing more advanced functionality you can fork it and [make your own](https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a).
-
-React Mapbox and it's one dependency [React Script](https://github.com/flip-inc/react-script) only rely on React, so the library is extremely lightweight. The Mapbox library itself is dynamically injected when needed, so this package won't affect bundle size on views that don't need maps.
+It's simple to get a script loading, but you can easily dig into more advanced functionality if you need it.
 
 ## Example
 ```javascript
-import React, { PureComponent } from 'react';
-import Mapbox, { Marker, ZoomControl } from 'react-mapbox';
+import React, { Component } from 'react';
+import Script from 'react-script';
 
-class MapView extends PureComponent {
-  this.state = {
-    viewport: {
-      center: {
-        lat: 37.7577,
-        lng: -122.4376,
-      },
-      zoom: 10,
-    },
+class Mapbox extends Component {
+  handleLoad = () => {
+    // Mapbox is ready!
   };
 
-  render () {
+  render() {
     return (
-      <div className="map">
-        <Mapbox
-          mapbox={{
-            accessToken: 'your-access-token',
-            style: 'mapbox://styles/your-map-style',
-          }}
-          viewport={this.state.viewport}>
-          <ZoomControl />
-          <Marker
-            lat={37.7577}
-            lng={-122.4376}>
-            <div className="marker">
-              You are here!
-            </div>
-          </Marker>
-        </Mapbox>
-      </div>
-    );
+      <Script
+        url="https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.js"
+        onLoad={this.handleLoad}
+      />
+    )
   }
-};
+}
 ```
 
-React Mapbox supports several useful callbacks: `onClick`, `onError`, `onLoad`, `onMoveEnd`, `onTouchEnd`
-
-`onTouchEnd` and `onMoveEnd` pass the new map position details as a parameter:
-```
-    {
-      bearing: map.getBearing(),
-      bounds: {
-        northeast: {
-          lat: bounds.getNorth(),
-          lng: bounds.getEast(),
-        },
-        southwest: {
-          lat: bounds.getSouth(),
-          lng: bounds.getWest(),
-        },
-      },
-      center: {
-        lat: center.lat(),
-        lng: center.lng(),
-      },
-      pitch: map.getPitch(),
-      zoom: map.getZoom(),
-    }
-```
-
-`onLoad` fires when the map is fully loaded. It's hooked into the `load` event within mapbox-gl-js, which means the style has loaded and the map has rendered for the first time.
+React Script also has callbacks for `onError` and `onCreate`. `onCreate` fires when the script is initially injected, so if another component injected the script or it was previously loaded, this callback won't fire.
 
 
 ## Compatibility
 
-React Mapbox exclusively works with React 16+ because it relies on the new Context API in React 16.
+React Script exclusively works with React 16+ because it relies on the new Context API in React 16.
 
 ## Installation
 
 Yarn:
 ```bash
-yarn add react-mapbox
+yarn add react-script
 ```
 
 npm:
 ```bash
-npm install --save react-mapbox
+npm install --save react-script
 ```
 
 ## Server Usage
 
-React Script is handling the script loading, so you can setup a ScriptProvider and render your scripts from the server.
+ScriptProvider takes an `injectScript` function, and calls it with whatever scripts are rendered in your app. The scripts passed to that function take this form:
+```javascript
+{
+  onLoad?: string,
+  onCreate?: string,
+  onError?: string,
+  url: string,
+}
+```
+
+The callback functions are strings because they only apply to functions that you specifically pass to be fired independently of React. When server rendering, you can use this to initialize things ahead of React. For example, we use it to start initializing Mapbox as soon as possible instead of having to wait for our React app to load first. Here's how you can do that:
+
+```javascript
+import React, { Component, Fragment } from 'react';
+import Script from 'react-script';
+
+class Mapbox extends Component {
+  componentDidMount() {
+    // window.mapboxInstance is already ready!
+  }
+
+  handleLoad = () => {
+    // This fires on the initial Script render because mapbox-gl-js is already loaded
+  };
+
+  render() {
+    return (
+      <Fragment>
+        <Script
+          url="https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.js"
+          onLoad={{
+            react: this.handleLoad,
+            preReact: 'window.mapboxInstance = window.mapboxgl({ container: "mapbox-gl" })',
+          }}
+        />
+        <div id="mapbox-gl" />
+      </Fragment>
+    )
+  }
+}
+```
+
+And here's how you would handle that on the server:
 
 ```javascript
 import React from 'react';
@@ -109,13 +105,17 @@ const markup = React.renderToString(
   </ScriptProvider>
 );
 
-res.render('app', {
-  markup,
-  scripts,
-});
+res.send('
+  <html>
+    <head />
+    <body>
+      ${scripts.map(script => (
+        '<script src="${script.url}" onload="${script.onLoad}" type="text/javascript" />
+      ))}
+    </body>
+  </html>
+')
 ```
-
-You can view `react-script` documentation [here](https://github.com/flip-inc/react-script).
 
 ## Contributing to this project
 We have no contibution guide, it's just anarchy live your life
