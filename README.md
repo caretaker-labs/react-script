@@ -60,7 +60,9 @@ ScriptProvider takes an `injectScript` function, and calls it with whatever scri
 }
 ```
 
-The callback functions are strings because they only apply to functions that you specifically pass to be fired independently of React. When server rendering, you can use this to initialize things ahead of React. For example, we use it to start initializing Mapbox as soon as possible instead of having to wait for our React app to load first. Here's how you can do that:
+The callback functions are strings because they're functions that you optionally pass to be fired independent of React. When server rendering, you can use this to initialize things without waiting for React. For example, we use it to start initializing a Mapbox map as soon as we possibly can because it's a slower bootup. Here's how you can do that:
+
+In your app:
 
 ```javascript
 import React, { Component, Fragment } from 'react';
@@ -92,7 +94,7 @@ class Mapbox extends Component {
 }
 ```
 
-And here's how you would handle that on the server:
+Where you're handling server rendering:
 
 ```javascript
 import React from 'react';
