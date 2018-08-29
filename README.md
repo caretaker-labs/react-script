@@ -2,7 +2,7 @@
 
 ![npm Version](https://img.shields.io/badge/npm-v1.0.0-blue.svg)
 ![Real Download Count (Very Real)](https://img.shields.io/badge/proud%20dads-none%20I%20am%20a%20disappointment-red.svg?longCache=true&style=flat)
-![Very Real Test Coverage](https://img.shields.io/badge/github%20stars-700,000,000,000,000-brightgreen.svg)
+![Very Real Test Coverage](https://img.shields.io/badge/github%20stars-more%20than%20dan%20abramov-brightgreen.svg)
 
 React Mapbox is a dead simple, performant, and easy to use React library for Mapbox. Other libraries either aim to cover the entire mapbox-gl-js API, or provide specific functionality for unique use cases.
 
