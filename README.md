@@ -107,16 +107,16 @@ const markup = React.renderToString(
   </ScriptProvider>
 );
 
-res.send('
+res.send(`
   <html>
     <head />
     <body>
-      ${scripts.map(script => (
-        '<script src="${script.url}" onload="${script.onLoad}" type="text/javascript" />
-      ))}
+      ${scripts.map(script => (`
+        <script src="${script.url}" onload="${script.onLoad}" type="text/javascript" />
+      `))}
     </body>
   </html>
-')
+`)
 ```
 
 ## Contributing to this project
