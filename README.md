@@ -60,7 +60,9 @@ ScriptProvider takes an `injectScript` function, and calls it with whatever scri
 }
 ```
 
-The callback functions are strings because they're functions that you optionally pass to be fired independent of React. When server rendering, you can use this to initialize things without waiting for React. For example, we use it to start initializing a Mapbox map as soon as we possibly can because it's a slower bootup. Here's how you can do that:
+The callback functions are strings here because they're functions that you optionally pass to be fired independent of React. When server rendering, you can use this to initialize things without waiting for React.
+
+For example, we use it to start initializing a Mapbox map as soon as we possibly can because it's a slower bootup. Here's how you can do that:
 
 In your app:
 
